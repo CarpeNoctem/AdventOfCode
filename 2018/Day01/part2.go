@@ -9,21 +9,17 @@ import (
 
 func main() {
     var inputs = get_inputs("input.txt")
-
-    offsets := []int{0}
+    new_offset := 0
+    offsets := map[int]bool{0: true}
 
     input_index := 0
     for {
-        new_offset := offsets[len(offsets) -1] + inputs[input_index]
-        //fmt.Printf("searching %v\n", new_offset)
-        for _, prev_offset := range offsets {
-            if prev_offset == new_offset {
-                //fmt.Printf("Found repeat after %v iterations: %v\n", len(offsets), new_offset)
-                fmt.Printf("Found repeat: %v\n", new_offset)
-                os.Exit(0)
-            }
+        new_offset = new_offset + inputs[input_index]
+        if _, exists := offsets[new_offset]; exists {
+            fmt.Printf("Found repeat: %v\n", new_offset)
+            os.Exit(0)
         }
-        offsets = append(offsets, new_offset)
+        offsets[new_offset] = true
         input_index += 1
         if input_index >= len(inputs) {
             input_index = 0
